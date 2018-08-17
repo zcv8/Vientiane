@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync/atomic"
 	"unsafe"
-	"github.com/Vientiane/toolkit/cmap/errors"
+	"github.com/Vientiane/errors"
 )
 
 // linkedPair 代表单向链接的键-元素对的接口。
@@ -52,7 +52,7 @@ func newPair(key string, element interface{}) (Pair, error) {
 		hash: hash(key),
 	}
 	if element == nil {
-		return nil, errors.NewIllegalParameterError("element is nil")
+		return nil, NewIllegalParameterError("element is nil")
 	}
 	p.element = unsafe.Pointer(&element)
 	return p, nil
@@ -97,7 +97,7 @@ func (p *pair) SetNext(nextPair Pair) error {
 	}
 	pp, ok := nextPair.(*pair)
 	if !ok {
-		return errors.NewIllegalPairTypeError(nextPair)
+		return NewIllegalPairTypeError(nextPair)
 	}
 	atomic.StorePointer(&p.next, unsafe.Pointer(pp))
 	return nil

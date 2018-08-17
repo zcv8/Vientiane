@@ -2,33 +2,8 @@ package scheduler
 
 import (
 	"net/http"
-	"github.com/Vientiane/module"
 )
 
-
-//调度器摘要的结构
-type SummaryStruct struct {
-	RequestArgs     RequestArgs             `json:"request_args"`
-	DataArgs        DataArgs                `json:"data_args"`
-	ModuleArgs      ModuleArgs              `json:"module_args"`
-	Status          string                  `json:"status"`
-	Downloaders     []module.Downloader     `json:"downloaders"`
-	Analyzers       []module.Analyzer       `json:"analyzers"`
-	Pipelines       []module.Pipeline       `json:"pipelines"`
-	ReqBufferPool   BufferPoolSummaryStruct `json:"request_buffer_pool"`
-	RespBufferPool  BufferPoolSummaryStruct `json:"response_buffer_pool"`
-	ItemBufferPool  BufferPoolSummaryStruct `json:"item_buffer_pool"`
-	ErrorBufferPool BufferPoolSummaryStruct `json:"error_buffer_pool"`
-	NumURL          uint64                  `json:"url_number"`
-}
-
-//调度器摘要的接口类型
-type SchedSummary interface {
-	//用于获取摘要信息的结构化形式
-	Struct() SummaryStruct
-	//用于获取摘要信息的字符串形式
-	String() string
-}
 
 //调度器接口类型
 type Scheduler interface{

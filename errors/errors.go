@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"strings"
+	"errors"
 )
 
 // ErrorType 代表错误类型。
@@ -93,4 +94,9 @@ func NewIllegalParameterError(errMsg string) IllegalParameterError {
 
 func (ipe IllegalParameterError) Error() string {
 	return ipe.msg
+}
+
+
+func New(errMsg string)error {
+	return errors.New(errMsg)
 }

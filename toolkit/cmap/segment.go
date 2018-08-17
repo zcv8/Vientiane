@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"sync"
 	"sync/atomic"
-	"github.com/Vientiane/toolkit/cmap/errors"
 )
 
 // Segment 代表并发安全的散列段的接口。
@@ -106,9 +105,9 @@ func (s *segment) redistribute(pairTotal uint64, bucketSize uint64) (err error) 
 	defer func() {
 		if p := recover(); p != nil {
 			if pErr, ok := p.(error); ok {
-				err = errors.NewPairRedistributorError(pErr.Error())
+				err = NewPairRedistributorError(pErr.Error())
 			} else {
-				err = errors.NewPairRedistributorError(fmt.Sprintf("%s", p))
+				err = NewPairRedistributorError(fmt.Sprintf("%s", p))
 			}
 		}
 	}()

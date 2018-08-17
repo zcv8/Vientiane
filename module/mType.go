@@ -55,3 +55,13 @@ func LegalType(moduleType Type) bool {
 	}
 	return false
 }
+
+//用于获取组件的类型
+func GetType(mid MID) (bool, Type) {
+	parts, err := SplitMID(mid)
+	if err != nil {
+		return false, ""
+	}
+	mt, ok := legalLetterTypeMap[parts[0]]
+	return ok, mt
+}

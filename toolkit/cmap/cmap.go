@@ -3,7 +3,6 @@ package cmap
 import (
 	"math"
 	"sync/atomic"
-	"github.com/Vientiane/toolkit/cmap/errors"
 )
 
 // ConcurrentMap 代表并发安全的字典的接口。
@@ -38,10 +37,10 @@ func NewConcurrentMap(
 	concurrency int,
 	pairRedistributor PairRedistributor) (ConcurrentMap, error) {
 	if concurrency <= 0 {
-		return nil, errors.NewIllegalParameterError("concurrency is too small")
+		return nil, NewIllegalParameterError("concurrency is too small")
 	}
 	if concurrency > MAX_CONCURRENCY {
-		return nil, errors.NewIllegalParameterError("concurrency is too large")
+		return nil, NewIllegalParameterError("concurrency is too large")
 	}
 	cmap := &myConcurrentMap{}
 	cmap.concurrency = concurrency

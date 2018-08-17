@@ -2,7 +2,6 @@ package cmap
 
 import (
 	"fmt"
-	"github.com/Vientiane/toolkit/cmap"
 )
 
 // IllegalParameterError 代表非法的参数的错误类型。
@@ -27,7 +26,7 @@ type IllegalPairTypeError struct {
 }
 
 // newIllegalPairTypeError 会创建一个IllegalPairTypeError类型的实例。
-func NewIllegalPairTypeError(pair cmap.Pair) IllegalPairTypeError {
+func NewIllegalPairTypeError(pair Pair) IllegalPairTypeError {
 	return IllegalPairTypeError{
 		msg: fmt.Sprintf("concurrent map: illegal pair type: %T", pair),
 	}
