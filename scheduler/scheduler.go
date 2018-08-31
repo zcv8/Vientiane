@@ -152,6 +152,7 @@ func (sched *vientianeScheduler)download(){
 				errMsg := fmt.Sprintf("incorrect request type:%T", datum)
 				sendError(errors.New(errMsg), "", sched.errorBufferPool)
 			}
+			fmt.Println(req.HTTPReq().URL)
 			sched.downloadOne(req)
 		}
 	}()
@@ -248,11 +249,11 @@ func(sched *vientianeScheduler)analyzeOne(resp *structure.Response){
 			if data==nil {
 				continue
 			}
-			switch d:=data.(type) {
+			switch d:=data.(type) { //列出实现该接口的类型，也就是实现Data 接口的类型
 			case *structure.Request:
 				sched.sendReq(d)
-			case *structure.Item:
-				sendItem(*d,sched.itemBufferPool)
+			case structure.Item:
+				sendItem(d,sched.itemBufferPool)
 			default:
 				errMsg:=fmt.Sprintf("Unsupported data type %T! (data:%#v)",d,d)
 				sendError(errors.New(errMsg),"",sched.errorBufferPool)
@@ -261,6 +262,7 @@ func(sched *vientianeScheduler)analyzeOne(resp *structure.Response){
 	}
 	if errs!=nil{
 		for _,err:=range errs{
+			fmt.Println(err)
 			sendError(err,m.ID(),sched.errorBufferPool)
 		}
 	}
@@ -358,7 +360,7 @@ func(sched *vientianeScheduler)sendReq(req *structure.Request)bool{
 		return false
 	}
 	go func(req *structure.Request){
-		if err:=sched.respBufferPool.Put(req);err!=nil{
+		if err:=sched.reqBufferPool.Put(req);err!=nil{
 			log.Print("The request buffer pool was closed. Ignore request sending.")
 		}
 	}(req)
@@ -476,14 +478,14 @@ func (sched *vientianeScheduler) initBufferPool(dataArgs DataArgs) {
 		sched.reqBufferPool.Close()
 	}
 	sched.reqBufferPool,_=buffer.NewPool(dataArgs.ReqBufferCap,dataArgs.ReqMaxBufferNumber)
-	log.Print("-- Request buffer pool: bufferCap: %d, maxBufferNumber: %d",
+	log.Printf("-- Request buffer pool: bufferCap: %d, maxBufferNumber: %d",
 		sched.reqBufferPool.BufferCap(), sched.reqBufferPool.MaxBufferNumber())
 	//初始化响应缓冲池
 	if sched.respBufferPool!=nil&&!sched.respBufferPool.Closed(){
 		sched.respBufferPool.Close()
 	}
 	sched.respBufferPool,_=buffer.NewPool(dataArgs.RespBufferCap,dataArgs.RespMaxBufferNumber)
-	log.Print("-- Response buffer pool: bufferCap: %d, maxBufferNumber: %d",
+	log.Printf("-- Response buffer pool: bufferCap: %d, maxBufferNumber: %d",
 		sched.respBufferPool.BufferCap(), sched.respBufferPool.MaxBufferNumber())
 	//初始化条目缓冲池
 	if sched.itemBufferPool != nil && !sched.itemBufferPool.Closed() {
@@ -491,7 +493,7 @@ func (sched *vientianeScheduler) initBufferPool(dataArgs DataArgs) {
 	}
 	sched.itemBufferPool, _ = buffer.NewPool(
 		dataArgs.ItemBufferCap, dataArgs.ItemMaxBufferNumber)
-	log.Print("-- Item buffer pool: bufferCap: %d, maxBufferNumber: %d",
+	log.Printf("-- Item buffer pool: bufferCap: %d, maxBufferNumber: %d",
 		sched.itemBufferPool.BufferCap(), sched.itemBufferPool.MaxBufferNumber())
 	//初始化错误缓冲池
 	if sched.errorBufferPool != nil && !sched.errorBufferPool.Closed() {
@@ -499,7 +501,7 @@ func (sched *vientianeScheduler) initBufferPool(dataArgs DataArgs) {
 	}
 	sched.errorBufferPool, _ = buffer.NewPool(
 		dataArgs.ErrorBufferCap, dataArgs.ErrorMaxBufferNumber)
-	log.Print("-- Request buffer pool: bufferCap: %d, maxBufferNumber: %d",
+	log.Printf("-- Request buffer pool: bufferCap: %d, maxBufferNumber: %d",
 		sched.errorBufferPool.BufferCap(), sched.errorBufferPool.MaxBufferNumber())
 }
 

@@ -117,7 +117,7 @@ func NewAnalyzer(mid module.MID,scoreCalculator module.CalculateScore,
 			errors.NewIllegalParameterError("empty response parser list"))
 	}
 	var innerParsers []module.ParseResponse
-	for i, parser := range innerParsers {
+	for i, parser := range respParsers {
 		if parser == nil {
 			errMsg := fmt.Sprintf("nil response parser[%d]", i)
 			return nil, errors.NewCrawlerErrorBy(errors.ERROR_TYPE_ANALYZER,

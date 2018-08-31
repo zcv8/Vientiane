@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"sync"
 	"sync/atomic"
-	"github.com/Vientiane/toolkit/cmap/errors"
 )
 
 // Bucket 代表并发安全的散列桶的接口。
@@ -49,7 +48,7 @@ func newBucket() Bucket {
 
 func (b *bucket) Put(p Pair, lock sync.Locker) (bool, error) {
 	if p == nil {
-		return false, errors.NewIllegalParameterError("pair is nil")
+		return false, NewIllegalParameterError("pair is nil")
 	}
 	if lock != nil {
 		lock.Lock()

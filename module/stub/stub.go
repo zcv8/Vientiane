@@ -129,6 +129,7 @@ func NewModuleInternal(mid module.MID,scoreCalculator module.CalculateScore)(
 		return nil, errors.NewIllegalParameterError(
 			fmt.Sprintf("illegal ID %q:%s", mid, err))
 	}
+	fmt.Print(parts)
 	return &vientianeModuleInternal{
 		mid:             mid,
 		addr:            parts[2],
